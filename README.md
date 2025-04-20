@@ -12,3 +12,7 @@ Creating a virtual enviorment:
 Things to install with pip: (Run the following commands to install needed software to run this wrapper 😊)
 
     - `pip install bs4`
+
+
+The SiG.nfo is where you put your release group signature.
+Me.nfo is where you put your last message 4 the torrent 😊. Both have to be placed in the home folder in .configs folder :) .
