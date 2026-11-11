@@ -55,7 +55,7 @@ def Woah(h3r3):
 
 			m3 = True
 
-			open((os.path.join(h3r3, ".nfo")), "w").write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB"))
+			open((os.path.join(item_path, item + ".nfo")), "w").write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB"))
 
 			if not m3 and WhoOoP5: 
 				NfO = ""
@@ -108,6 +108,7 @@ def gE7(nF0, h3r3, NFo):
 			#else: #print(str(y))
 
 			##### Add setup file infront so it's automatic
+	return NF0 ###!! Hotfix
 
 def foREPlac3(b, nfO):
 	global TrL1s7, Ar7is7, dcount, Tcount, Dacount, ThiSizƎ, Scount, Os
