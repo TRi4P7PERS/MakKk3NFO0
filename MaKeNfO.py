@@ -1,3 +1,4 @@
+import sys
 import subprocess
 import datetime
 import os
@@ -19,6 +20,8 @@ ThiSizƎ = 0
 TrL1s7 = ""
 Ar7is7 = ""
 gen = ""
+
+Album = ""
 
 NF0M = ""
 
@@ -101,6 +104,8 @@ def gE7(nF0, h3r3, NFo):
 				if "/cover" in z or ".nfo" in z:
 					TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
 					##print(DeeZT1m35)
+					gen = subprocess.run(["python3", os.path.join(os.path.dirname(os.path.abspath(__file__)), "GetGenre.py"), Ar7is7, Album], stdout=subprocess.PIPE, text=True, timeout=30).stdout.strip() or "/"
+
 					NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB").replace("Geᴎ", gen)
 					return NF0
 				NF0 = foREPlac3(y, NF0)
@@ -111,14 +116,16 @@ def gE7(nF0, h3r3, NFo):
 	return NF0 ###!! Hotfix
 
 def foREPlac3(b, nfO):
-	global TrL1s7, Ar7is7, dcount, Tcount, Dacount, ThiSizƎ, Scount, Os
+	global TrL1s7, Ar7is7, Album, dcount, Tcount, Dacount, ThiSizƎ, Scount, Os
 
 	#check string lengths, " " "[". splikt on \n len.
 	#One before las "/" " - ". ##
 	#space check homie.. mod add :.dcoun Os 10 OS new Os nuke on - Stop on 10 < oN If can devided by 10 for o, GO ON ELSE STOP..
 
 	match b[0]:
-		case "Album :":nfO = nfO.replace("TiT", b[1])
+		case "Album :":
+			Album = b[1]
+			nfO = nfO.replace("TiT", b[1])
 		case "Track name :": 
 			if(Tcount == 1):
 				##print(Os)
@@ -260,8 +267,8 @@ def firS7 (a):
 
 if firS7(a) == 1:
 
-	h3r3 = input("Enter Music Directory | File 🙂: ")
+	h3r3 = sys.argv[1] if len(sys.argv) > 1 else input("Enter Music Directory | File 🙂: ")
 
-	gen = input("Enter Genre 🙂: ")
+	#gen = input("Enter Genre 🙂: ")
 
 	Woah(h3r3)
