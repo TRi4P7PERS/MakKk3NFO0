@@ -19,3 +19,9 @@ Things to install with pip: (Run the following commands to install needed softwa
 
 The SiG.nfo is where you put your release group signature.
 Me.nfo is where you put your last message 4 the torrent 😊. Both have to be placed in the home folder in .configs folder :) .
+
+Gemini genre lookup added on last update, you'll have to add your Gemini API key (you can add it at the end of the file) to your `~/.bashrc` like so (to open it in a file editor use the `nano ~/.bashrc` command):
+
+`export GEMINI_API_KEY="YOUR.API.KEY"`
+
+Then update it with `source ~/.bashrc`
