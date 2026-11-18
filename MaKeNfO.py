@@ -42,19 +42,26 @@ def Woah(h3r3):
 	global NoFil3S, TrL1s7, DeeZT1m35
 	global L457, M3
 
-	WhoOoP5 = False
 	m3 = False
 
 	NfO = ""
 	NF0M = ""
 
+	folders = [
+		item for item in os.listdir(h3r3)
+		if os.path.isdir(os.path.join(h3r3, item))
+	]
+
+	volume_folders = [
+		item for item in folders
+		if VolUM3(item)
+	]
+
 	#print(L457)
 
-	for item in os.listdir(h3r3):
-		item_path = os.path.join(h3r3, item)
-
-		if os.path.isdir(item_path):
-			WhoOoP5 = True
+	if folders and not volume_folders:
+		for item in folders:
+			item_path = os.path.join(h3r3, item)
 
 			NfO = fix(NfO, item_path)
 
@@ -62,30 +69,42 @@ def Woah(h3r3):
 
 			m3 = True
 
-			open((os.path.join(item_path, item + ".nfo")), "w").write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB"))
-
-			if not m3 and WhoOoP5: 
-				NfO = ""
-				TrL1s7 = ""
-				DeeZT1m35 = [0, 0, 0]
+			with open(os.path.join(item_path, item + ".nfo"), "w", encoding="utf-8") as file:
+				file.write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB"))
 
 	if m3:
-		open(os.path.join(h3r3, h3r3.split("/")[len(h3r3.split("/")) - 1] + ".nfo"), "w").write(NF0M + "---------------------------------------------------------------------\nIf you like it" + NfO.split("---------------------------------------------------------------------\nIf you like it")[1])
+		with open(os.path.join(h3r3, h3r3.split("/")[len(h3r3.split("/")) - 1] + ".nfo"), "w", encoding="utf-8") as file:
+			file.write(NF0M + "---------------------------------------------------------------------\nIf you like it" + NfO.split("---------------------------------------------------------------------\nIf you like it")[1])
 
-	if not m3: open(os.path.join(h3r3, h3r3.split("/")[len(h3r3.split("/")) - 1] + ".nfo"), "w").write(fix(NfO, h3r3))
+	if not m3:
+		NfO = fix(NfO, h3r3)
+
+		with open(os.path.join(h3r3, h3r3.split("/")[len(h3r3.split("/")) - 1] + ".nfo"), "w", encoding="utf-8") as file:
+			file.write(NfO)
 
 def fix(NfO, h3r3):
-	global NoFil3S, dcount, Tcount, Dacount, Scount, DeeZT1m35, ThiSizƎ, TrL1s7
+	global NoFil3S, dcount, Tcount, Dacount, Scount, DeeZT1m35, ThiSizƎ, TrL1s7, Os
 
 	NFo = [[[td.get_text(strip=True) for td in tr.find_all('td')] for tr in table.find_all('tr') ] for table in BeautifulSoup(subprocess.run(['mediainfo', h3r3, "--Output=HTML"], capture_output=True, text=True).stdout, 'html.parser').find_all('table')]
+	
+	Os = 1
 
-	NoFil3S = len([name for name in os.listdir(h3r3) if os.path.isfile(os.path.join(h3r3, name))]) - 2
+	
+	NoFil3S = sum(
+		1
+		for root, dirs, files in os.walk(h3r3)
+		for name in files
+		if name.lower().endswith((
+			".flac", ".mp3", ".wav", ".aiff", ".aif", ".m4a",
+			".aac", ".ogg", ".opus", ".wma", ".ape", ".wv",
+			".tta", ".mpc"
+		))
+	)
+
 	howManY()
 	NfO = gE7(NfO, h3r3, NFo)
 
 	##print(NfO)
-
-	open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/TemPla7Ǝ.nfo")), "r").read()
 
 	dcount = 0
 	Tcount = 0
@@ -97,32 +116,77 @@ def fix(NfO, h3r3):
 
 	return NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("s\n   \n", "s\n")
 
+def VolUM3(name):
+	return "-" not in name and any(char.isdigit() for char in name)
+
+
+
+
 def gE7(nF0, h3r3, NFo):
 	global TrL1s7, Ar7is7, gen
 
-	NF0 = open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/TemPla7Ǝ.nfo")), "r").read()
+	with open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/TemPla7Ǝ.nfo")), "r", encoding="utf-8") as file:
+		NF0 = file.read()
+
+	IsSingles = os.path.basename(os.path.normpath(h3r3)) == "Singles"
+	TrackArtist = ""
 
 	for x in NFo:
 		for y in x:
+			if any("/cover" in z or ".nfo" in z for z in y):
+				continue
+
+			# Get each Singles track's artist from its filename.
+			if IsSingles and len(y) > 1 and y[0] == "Complete name :":
+				TrackArtist = os.path.basename(y[1]).split(" - ", 1)[0]
+
+				number, separator, artist = TrackArtist.partition(". ")
+
+				if separator and number.isdigit():
+					TrackArtist = artist
+
 			for z in y:
-				if "/cover" in z or ".nfo" in z:
-					TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
-					##print(DeeZT1m35)
-					try:
-						gen = get_genre(Ar7is7, Album)
-
-					except Exception as error:
-						print(f"[Genre] Lookup failed: {error}", file=sys.stderr)
-						gen = "/"
-
-					NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB").replace("Geᴎ", gen)
-					return NF0
 				NF0 = foREPlac3(y, NF0)
-			#if "Complete name :" in y: #print("\n" + str(y))
-			#else: #print(str(y))
 
-			##### Add setup file infront so it's automatic
-	return NF0 ###!! Hotfix
+				# Replace the artist as soon as a track is added.
+				if IsSingles and TrackArtist:
+					TrL1s7 = TrL1s7.replace("AAA-", TrackArtist + " - ")
+
+	genre_artist = Ar7is7
+	genre_album = Album
+
+	# Correct consolidated Singles metadata.
+	if IsSingles:
+		original_artist = NF0.split("Artist...............: ", 1)[1].splitlines()[0]
+		original_album = NF0.split("Album................: ", 1)[1].splitlines()[0]
+
+		number, separator, artist = original_artist.partition(". ")
+
+		if not (separator and number.isdigit()):
+			artist = original_artist
+
+		NF0 = NF0.replace("Artist...............: " + original_artist, "Artist...............: " + artist, 1)
+		NF0 = NF0.replace("Album................: " + original_album, "Album................: Singles", 1)
+
+		genre_artist = artist
+		genre_album = "Singles"
+
+	if not IsSingles:
+		TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
+
+	try:
+		gen = get_genre(genre_artist, genre_album)
+
+	except Exception as error:
+		print(f"[Genre] Lookup failed: {error}", file=sys.stderr)
+		gen = "/"
+
+	NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB").replace("Geᴎ", gen)
+
+	return NF0
+
+
+
 
 def foREPlac3(b, nfO):
 	global TrL1s7, Ar7is7, Album, dcount, Tcount, Dacount, ThiSizƎ, Scount, Os
@@ -148,7 +212,7 @@ def foREPlac3(b, nfO):
 							TrL1s7 += "0"
 						TrL1s7 += str(Dacount) + ". AAA-" +b[1]
 
-					if(len(str(NoFil3S)) == len(str(Dacount))): TrL1s7 += str(Dacount) + ". AAA-" +b[1]
+					if(len(str(NoFil3S)) <= len(str(Dacount))): TrL1s7 += str(Dacount) + ". AAA-" +b[1]
 				else:
 					TrL1s7 += str(Dacount) + ". AAA-" +b[1]
 				Dacount += 1
@@ -274,13 +338,15 @@ def firS7 (a):
 
 	if os.path.isfile(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/SiG.nfo"))):
 		a = 1
-		L457 = open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/SiG.nfo")), "r").read()[:-1]
+		with open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/SiG.nfo")), "r", encoding="utf-8") as file:
+			L457 = file.read()[:-1]
 	else:
 		print("Set Signature in: " + os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/SiG.nfo")) + " <--- In this file 😊 .")
 
 	if os.path.isfile(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/Me.nfo"))):
 		a = 1
-		M3 = open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/Me.nfo")), "r").read()[:-1]
+		with open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/Me.nfo")), "r", encoding="utf-8") as file:
+			M3 = file.read()[:-1]
 	else:
 		print("Enter last message ❤️ in: " + os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/Me.nfo"))+ " <-- File.")
 
