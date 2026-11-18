@@ -70,7 +70,7 @@ def Woah(h3r3):
 			m3 = True
 
 			with open(os.path.join(item_path, item + ".nfo"), "w", encoding="utf-8") as file:
-				file.write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB"))
+				file.write(NfO.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", IgetTH4tSize()))
 
 	if m3:
 		with open(os.path.join(h3r3, h3r3.split("/")[len(h3r3.split("/")) - 1] + ".nfo"), "w", encoding="utf-8") as file:
@@ -86,6 +86,7 @@ def fix(NfO, h3r3):
 	global NoFil3S, dcount, Tcount, Dacount, Scount, DeeZT1m35, ThiSizƎ, TrL1s7, Os
 
 	NFo = [[[td.get_text(strip=True) for td in tr.find_all('td')] for tr in table.find_all('tr') ] for table in BeautifulSoup(subprocess.run(['mediainfo', h3r3, "--Output=HTML"], capture_output=True, text=True).stdout, 'html.parser').find_all('table')]
+
 	
 	Os = 1
 
@@ -128,28 +129,46 @@ def gE7(nF0, h3r3, NFo):
 	with open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/TemPla7Ǝ.nfo")), "r", encoding="utf-8") as file:
 		NF0 = file.read()
 
+	
 	IsSingles = os.path.basename(os.path.normpath(h3r3)) == "Singles"
 	TrackArtist = ""
-
+	IsAudio = False
+	
 	for x in NFo:
 		for y in x:
+			if len(y) > 1 and y[0] == "Complete name :":
+				IsAudio = y[1].lower().endswith((
+					".flac", ".mp3", ".wav", ".aiff", ".aif", ".m4a",
+					".aac", ".ogg", ".opus", ".wma", ".ape", ".wv",
+					".tta", ".mpc"
+				))
+	
+			if y and y[0] == "File size :" and not IsAudio:
+				continue
+	
 			if any("/cover" in z or ".nfo" in z for z in y):
 				continue
+	
 
-			# Get each Singles track's artist from its filename.
-			if IsSingles and len(y) > 1 and y[0] == "Complete name :":
-				TrackArtist = os.path.basename(y[1]).split(" - ", 1)[0]
-
-				number, separator, artist = TrackArtist.partition(". ")
-
-				if separator and number.isdigit():
-					TrackArtist = artist
+			# Get each track's artist from its filename.
+			if len(y) > 1 and y[0] == "Complete name :":
+				TrackArtist = ""
+			
+				filename = os.path.basename(y[1])
+			
+				if " - " in filename:
+					TrackArtist = filename.split(" - ", 1)[0]
+			
+					number, separator, artist = TrackArtist.partition(". ")
+			
+					if separator and number.isdigit():
+						TrackArtist = artist
 
 			for z in y:
 				NF0 = foREPlac3(y, NF0)
 
 				# Replace the artist as soon as a track is added.
-				if IsSingles and TrackArtist:
+				if TrackArtist:
 					TrL1s7 = TrL1s7.replace("AAA-", TrackArtist + " - ")
 
 	genre_artist = Ar7is7
@@ -171,8 +190,7 @@ def gE7(nF0, h3r3, NFo):
 		genre_artist = artist
 		genre_album = "Singles"
 
-	if not IsSingles:
-		TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
+	TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
 
 	try:
 		gen = get_genre(genre_artist, genre_album)
@@ -181,7 +199,7 @@ def gE7(nF0, h3r3, NFo):
 		print(f"[Genre] Lookup failed: {error}", file=sys.stderr)
 		gen = "/"
 
-	NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB").replace("Geᴎ", gen)
+	NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", IgetTH4tSize()).replace("Geᴎ", gen)
 
 	return NF0
 
@@ -242,9 +260,24 @@ def foREPlac3(b, nfO):
 						##print("Sec: " + b[1].split(" min ")[0])
 			else:
 				dcount += 1
-		case "File size :": 
+		
+		case "File size :":
 			if (Scount == 1):
-				ThiSizƎ += float(b[1].split(" ")[0])
+				size, unit = b[1].split()[:2]
+		
+				units = {
+					"B": 1 / (1024 ** 2),
+					"KiB": 1 / 1024,
+					"MiB": 1,
+					"GiB": 1024,
+					"TiB": 1024 ** 2
+				}
+		
+				if unit in units:
+					ThiSizƎ += float(size) * units[unit]
+				else:
+					print(f"[Size] Unknown unit: {b[1]}", file=sys.stderr)
+		
 				Scount = 0
 			else:
 				Scount += 1
@@ -306,6 +339,12 @@ def IgetThe():
 #	if DeeZT1m35[2] > 0: return str(DeeZT1m35[2]) + " h " + str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
 #	if DeeZT1m35[0] > 0: return str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
 #	else: return str(DeeZT1m35[1]) + " sec"
+
+def IgetTH4tSize():
+	if ThiSizƎ >= 1024:
+		return str(round(ThiSizƎ / 1024, 2)) + " GiB"
+
+	return str(round(ThiSizƎ, 2)) + " MiB"
 
 def f1xMƎ(TrL1s7):
 	Tr4L1s7 = ""
