@@ -406,9 +406,9 @@ Rules:
         print(f"[Gemini] Request failed: {error}", file=sys.stderr)
         return None
 
-if __name__ == "__main__":
-    artist = sys.argv[1]
-    album = sys.argv[2]
+
+
+def get_genre(artist, album):
 
     # 1. Exact album on Discogs
     genre = discogs_genre(artist, album)
@@ -462,4 +462,11 @@ if __name__ == "__main__":
             )
 
     # 7. Nothing found
-    print(genre or "/")
+    return genre or "/"
+
+
+if __name__ == "__main__":
+    artist = sys.argv[1]
+    album = sys.argv[2]
+
+    print(get_genre(artist, album))

@@ -8,6 +8,10 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
+
+from GetGenre import get_genre
+
+
 i = 0
 dcount = 0
 Tcount = 0
@@ -25,7 +29,6 @@ Album = ""
 
 NF0M = ""
 
-WhoOoP5 = False
 
 L457 = ""
 M3 = "#"
@@ -39,6 +42,7 @@ def Woah(h3r3):
 	global NoFil3S, TrL1s7, DeeZT1m35
 	global L457, M3
 
+	WhoOoP5 = False
 	m3 = False
 
 	NfO = ""
@@ -104,7 +108,12 @@ def gE7(nF0, h3r3, NFo):
 				if "/cover" in z or ".nfo" in z:
 					TrL1s7 = TrL1s7.replace("AAA-", Ar7is7 + " - ")
 					##print(DeeZT1m35)
-					gen = subprocess.run(["python3", os.path.join(os.path.dirname(os.path.abspath(__file__)), "GetGenre.py"), Ar7is7, Album], stdout=subprocess.PIPE, text=True, timeout=30).stdout.strip() or "/"
+					try:
+						gen = get_genre(Ar7is7, Album)
+
+					except Exception as error:
+						print(f"[Genre] Lookup failed: {error}", file=sys.stderr)
+						gen = "/"
 
 					NF0 = NF0.replace("x.X.x", L457).replace("Y.y.Y 😊", M3).replace("HeaD", padMe(h3r3.split("/")[len(h3r3.split("/")) - 1].split(" [")[0])).replace("TR_lis7", f1xMƎ(TrL1s7)).replace("DSotM", IgetThe()).replace("BiG", str(round(ThiSizƎ, 2)) + " MiB").replace("Geᴎ", gen)
 					return NF0
@@ -211,16 +220,28 @@ def howManY():
 def IgetThe():
 	global DeeZT1m35
 
-	if DeeZT1m35[1] > 60: 
-		DeeZT1m35[0] += DeeZT1m35[1] // 60
-		DeeZT1m35[1] %= 60
-	if DeeZT1m35[0] > 60: 
-		DeeZT1m35[2] += DeeZT1m35[0] // 60
-		DeeZT1m35[0] %= 60
+	total_seconds = DeeZT1m35[2] * 3600 + DeeZT1m35[0] * 60 + DeeZT1m35[1]
 
-	if DeeZT1m35[2] > 0: return str(DeeZT1m35[2]) + " h " + str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
-	if DeeZT1m35[0] > 0: return str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
-	else: return str(DeeZT1m35[1]) + " sec"
+	hours, remainder = divmod(total_seconds, 3600)
+	minutes, seconds = divmod(remainder, 60)
+
+	if hours > 0: return f"{hours} h {minutes} min {seconds} sec"
+	if minutes > 0: return f"{minutes} min {seconds} sec"
+	return f"{seconds} sec"
+
+#old def IgetThe():
+#	global DeeZT1m35
+#
+#	if DeeZT1m35[1] > 60: 
+#		DeeZT1m35[0] += DeeZT1m35[1] // 60
+#		DeeZT1m35[1] %= 60
+#	if DeeZT1m35[0] > 60: 
+#		DeeZT1m35[2] += DeeZT1m35[0] // 60
+#		DeeZT1m35[0] %= 60
+#
+#	if DeeZT1m35[2] > 0: return str(DeeZT1m35[2]) + " h " + str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
+#	if DeeZT1m35[0] > 0: return str(DeeZT1m35[0]) + " min " + str(DeeZT1m35[1]) + " sec"
+#	else: return str(DeeZT1m35[1]) + " sec"
 
 def f1xMƎ(TrL1s7):
 	Tr4L1s7 = ""
