@@ -7,6 +7,7 @@ MakKke NFO: A cli version of Music NFO Builder, for Linux :) .
 - Support multi-volume albums with one combined NFO.
 - Automatically number tracks, including leading zeros.
 - Calculate total playing time and file size.
+- Can also produce an nfo for singles in a discography NFO.
 - Retrieve genres using Discogs, MusicBrainz, cached metadata and an optional Gemini fallback.
 - Customize the release group signature and final message.
 
@@ -33,7 +34,7 @@ git clone https://github.com/TRi4P7PERS/MakKk3NFO0.git
 cd MakKk3NFO0
 ```
 
-(Optional) Create and activate a virtual environment: `// You can also skip this step, then you'll be able to run MaKeNfO w/o the virtual environment, but will also have Beautiful Soup 4 installed outside a virtual environment.`
+(Recommended) Create and activate a virtual environment: `You can also skip this step, then you'll be able to run MaKeNfO w/o the virtual environment, but will also have Beautiful Soup 4 installed outside a virtual environment.`
 
 ```bash
 python3 -m venv path/to/venv
@@ -54,6 +55,12 @@ Create the `~/.configs` folder if it doesn't exist:
 mkdir -p ~/.configs
 ```
 
+Then copy configuration files from the cloned repo into it :) :
+
+```bash
+cp SiG.nfo Me.nfo TemPla7Ǝ.nfo ~/.configs/
+```
+
 ### The script uses the following files:
 
 SiG.nfo — Your release group signature.
@@ -62,7 +69,7 @@ Me.nfo — Your final message for the NFO. 😊
 
 TemPla7Ǝ.nfo — The NFO template used to generate the output.
 
-Place these files inside `~/.configs.` , and edit them to your needs (besides `TemPla7Ǝ.nfo`).
+Place these files inside `~/.configs` , and edit them to your needs (besides `TemPla7Ǝ.nfo`).
 
 ### Automatic Genre Lookup
 
