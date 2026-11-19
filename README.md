@@ -107,5 +107,10 @@ python3 MaKeNfO.py
 
 Sidenote: Albums should use the "Artist - Album" naming convention :) .
 
+## Scripts End Result
+
+<img width="508" height="845" alt="image" src="https://github.com/user-attachments/assets/60c2c310-19c6-4a2b-a668-99c891e5e6f3" />
+
+
 
 Enjoy 😊.
