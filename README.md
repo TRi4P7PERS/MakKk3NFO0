@@ -1,27 +1,104 @@
 # MakKk3NFO0
-MakKke NFO: A cli version for Linux only, of Music NFO Builder :) .
+MakKke NFO: A cli version of Music NFO Builder, for Linux :) .
 
-#Installation 😊:
+## Features
 
-Create a virtual enviorment with python, choose a folder before where you want it then after you create it install the needed repos from pip, copy the files from the github repository in and it should work.
+- Generate NFO files for individual albums or complete artist discographies.
+- Support multi-volume albums with one combined NFO.
+- Automatically number tracks, including leading zeros.
+- Calculate total playing time and file size.
+- Retrieve genres using Discogs, MusicBrainz, cached metadata and an optional Gemini fallback.
+- Customize the release group signature and final message.
 
-Creating a virtual enviorment:
+## Installation 😊:
 
-    - Run `python -m venv /path/to/new/virtual/environment` where path is your path
+### Requirements:
 
-
-    You'll have to run `source bin/activate` in that folder then install the requirements :) .
-
-Things to install with pip: (Run the following commands to install needed software to run this wrapper 😊)
-
-    - `pip install bs4`
+- Linux
+- Python 3.10 or newer
+- MediaInfo
+- Beautiful Soup 4
 
 
-The SiG.nfo is where you put your release group signature.
-Me.nfo is where you put your last message 4 the torrent 😊. Both have to be placed in the home folder in .configs folder :) .
+On Debian/Ubuntu, install MediaInfo and the Python virtual environment support:
 
-Gemini genre lookup added on last update, you'll have to add your Gemini API key (you can add it at the end of the file) to your `~/.bashrc` like so (to open it in a file editor use the `nano ~/.bashrc` command):
+```bash
+sudo apt install mediainfo python3-venv
+```
 
-`export GEMINI_API_KEY="YOUR.API.KEY"`
+Clone the repository:
 
-Then update it with `source ~/.bashrc`
+```
+git clone https://github.com/TRi4P7PERS/MakKk3NFO0.git
+cd MakKk3NFO0
+```
+
+(Optional) Create and activate a virtual environment: `// You can also skip this step, then you'll be able to run MaKeNfO w/o the virtual environment, but will also have Beautiful Soup 4 installed outside a virtual environment.`
+
+```bash
+python3 -m venv path/to/venv
+source path/to/venv/bin/activate
+```
+
+Install the required Python package:
+
+```
+pip install beautifulsoup4
+```
+
+## Configuration
+
+Create the `~/.configs` folder if it doesn't exist:
+
+```bash
+mkdir -p ~/.configs
+```
+
+### The script uses the following files:
+
+SiG.nfo — Your release group signature.
+
+Me.nfo — Your final message for the NFO. 😊
+
+TemPla7Ǝ.nfo — The NFO template used to generate the output.
+
+Place these files inside `~/.configs.` , and edit them to your needs (besides `TemPla7Ǝ.nfo`).
+
+### Automatic Genre Lookup
+
+Genres are retrieved from Discogs, MusicBrainz and (optional) from Gemini as a last resort.
+
+To configure Gemini, add your API key to `~/.bashrc`:
+
+```
+export GEMINI_API_KEY="YOUR_API_KEY"
+```
+
+Then reload your shell configuration:
+
+```bash
+source ~/.bashrc
+```
+
+If you wish to turn off genre lookup with Gemini just change the line `USE_GEMINI = True` to `USE_GEMINI = False` in the `GetGenre.py` file.
+
+Support for cached genres is added, while also having the support for using the genre of another album from the same artist for fallback 😁.
+
+## Usage
+
+Run the script with an album or discography directory:
+
+```
+python3 MaKeNfO.py "/path/to/Artist - Album"
+```
+
+Or launch it without arguments and enter the path when prompted:
+
+```
+python3 MaKeNfO.py
+```
+
+Sidenote: Albums should use the "Artist - Album" naming convention :) .
+
+
+Enjoy 😊.
