@@ -220,7 +220,7 @@ def discogs_genre(artist, album):
                 has_exact_artist(release, artist)
                 and normalize(release.get("title", "")) == normalize(album)
             ):
-                genre = join_genres(release.get("genres", []))
+                genre = join_genres(release.get("styles", [])) or join_genres(release.get("genres", []))
 
                 if genre:
                     return genre
@@ -264,7 +264,7 @@ def musicbrainz_genre(artist, album):
             )
 
             release = get_json(genre_url, MUSICBRAINZ_HEADERS)
-            genre = join_genres(release.get("genres", []))
+            genre = join_genres(release.get("styles", [])) or join_genres(release.get("genres", []))
 
             if genre:
                 return genre
