@@ -3,6 +3,7 @@ import subprocess
 import datetime
 import os
 import getpass
+import re
 
 from datetime import datetime
 
@@ -85,22 +86,39 @@ def Woah(h3r3):
 def fix(NfO, h3r3):
 	global NoFil3S, dcount, Tcount, Dacount, Scount, DeeZT1m35, ThiSizƎ, TrL1s7, Os
 
-	NFo = [[[td.get_text(strip=True) for td in tr.find_all('td')] for tr in table.find_all('tr') ] for table in BeautifulSoup(subprocess.run(['mediainfo', h3r3, "--Output=HTML"], capture_output=True, text=True).stdout, 'html.parser').find_all('table')]
+	media_files = []
+
+	for root, dirs, files in os.walk(h3r3):
+		dirs.sort(key=N4tural)
+
+		for name in sorted(files, key=N4tural):
+			if name.lower().endswith((
+				".flac", ".mp3", ".wav", ".aiff", ".aif", ".m4a",
+				".aac", ".ogg", ".opus", ".wma", ".ape", ".wv",
+				".tta", ".mpc", ".mp4", ".mkv", ".mov", ".m4v",
+				".webm", ".avi"
+			)):
+				media_files.append(os.path.join(root, name))
+
+	NFo = [
+		[
+			[td.get_text(strip=True) for td in tr.find_all("td")]
+			for tr in table.find_all("tr")
+		]
+		for table in BeautifulSoup(
+			subprocess.run(
+				["mediainfo", "--Output=HTML", *media_files],
+				capture_output=True, text=True
+			).stdout, "html.parser"
+		).find_all("table")
+	]
+
 
 	
 	Os = 1
 
 	
-	NoFil3S = sum(
-		1
-		for root, dirs, files in os.walk(h3r3)
-		for name in files
-		if name.lower().endswith((
-			".flac", ".mp3", ".wav", ".aiff", ".aif", ".m4a",
-			".aac", ".ogg", ".opus", ".wma", ".ape", ".wv",
-			".tta", ".mpc"
-		))
-	)
+	NoFil3S = len(media_files)
 
 	howManY()
 	NfO = gE7(NfO, h3r3, NFo)
@@ -120,11 +138,68 @@ def fix(NfO, h3r3):
 def VolUM3(name):
 	return "-" not in name and any(char.isdigit() for char in name)
 
+def N4tural(name):
+	return [
+		int(part) if part.isdigit() else part.casefold()
+		for part in re.split(r"(\d+)", name)
+	]
 
+
+def AddVid3o(path, h3r3):
+	global Dacount, TrL1s7, ThiSizƎ, DeeZT1m35, NoFil3S, Ar7is7
+
+	result = subprocess.run(
+		["mediainfo", "--Inform=General;%Duration%", path],
+		capture_output=True, text=True
+	)
+
+	try:
+		seconds = round(float(result.stdout.strip()) / 1000)
+	except ValueError:
+		print(f"[Video] Could not read duration: {path}", file=sys.stderr)
+		seconds = 0
+
+	hours, remainder = divmod(seconds, 3600)
+	minutes, secs = divmod(remainder, 60)
+
+	if hours:
+		duration = f"{hours} h {minutes} min {secs} s"
+	elif minutes:
+		duration = f"{minutes} min {secs} s"
+	else:
+		duration = f"{secs} s"
+
+	filename = os.path.splitext(os.path.basename(path))[0]
+	number, separator, title = filename.partition(". ")
+
+	if separator and number.isdigit():
+		filename = title
+
+	artist, separator, title = filename.partition(" - ")
+
+	if not separator:
+		folder = os.path.basename(os.path.normpath(h3r3)).split(" [", 1)[0]
+		artist = folder.split(" - ", 1)[0] if " - " in folder else Ar7is7
+		title = filename
+
+	width = max(2, len(str(NoFil3S)))
+
+	TrL1s7 += (
+		f"{Dacount:0{width}d}. {artist} - {title} [Video]"
+		f" .x.{duration}\n   "
+	)
+
+	Dacount += 1
+
+	DeeZT1m35[2] += hours
+	DeeZT1m35[0] += minutes
+	DeeZT1m35[1] += secs
+
+	ThiSizƎ += os.path.getsize(path) / (1024 ** 2)
 
 
 def gE7(nF0, h3r3, NFo):
-	global TrL1s7, Ar7is7, gen
+	global TrL1s7, Ar7is7, gen, Dacount, ThiSizƎ, DeeZT1m35
 
 	with open(os.path.join(os.path.join(os.path.join("/home/", getpass.getuser()), ".configs/TemPla7Ǝ.nfo")), "r", encoding="utf-8") as file:
 		NF0 = file.read()
@@ -133,21 +208,32 @@ def gE7(nF0, h3r3, NFo):
 	IsSingles = os.path.basename(os.path.normpath(h3r3)) == "Singles"
 	TrackArtist = ""
 	IsAudio = False
+
+	SeenVideos = set()
 	
 	for x in NFo:
 		for y in x:
+			
 			if len(y) > 1 and y[0] == "Complete name :":
-				IsAudio = y[1].lower().endswith((
+				path = y[1]
+
+				IsAudio = path.lower().endswith((
 					".flac", ".mp3", ".wav", ".aiff", ".aif", ".m4a",
 					".aac", ".ogg", ".opus", ".wma", ".ape", ".wv",
 					".tta", ".mpc"
 				))
-	
-			if y and y[0] == "File size :" and not IsAudio:
+
+				IsVideo = path.lower().endswith((
+					".mp4", ".mkv", ".mov", ".m4v", ".webm", ".avi"
+				))
+
+				if IsVideo and path not in SeenVideos:
+					SeenVideos.add(path)
+					AddVid3o(path, h3r3)
+
+			if not IsAudio:
 				continue
-	
-			if any("/cover" in z or ".nfo" in z for z in y):
-				continue
+
 	
 
 			# Get each track's artist from its filename.
@@ -170,6 +256,7 @@ def gE7(nF0, h3r3, NFo):
 				# Replace the artist as soon as a track is added.
 				if TrackArtist:
 					TrL1s7 = TrL1s7.replace("AAA-", TrackArtist + " - ")
+
 
 	genre_artist = Ar7is7
 	genre_album = Album
